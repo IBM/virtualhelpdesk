@@ -1,15 +1,19 @@
 ---
 declared-services:
-  my-conversation-service:
+  Conversation-ICD:
     label: conversation
     plan: free
+  Discovery-ICD:
+    label: discovery
+    plan: lite
 applications:
-- name: maximobot
+- name: vaticketbot2
   command: npm start
   path: .
   memory: 512M
   instances: 1
   services:
-  - my-conversation-service
+  - Conversation-ICD
+  - Discovery-ICD
   env:
     NPM_CONFIG_PRODUCTION: false

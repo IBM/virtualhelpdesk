@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 IBM Corp. All Rights Reserved.
+ * Copyright 2018 IBM Corp. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,11 @@ var express = require('express'); // app server
 var bodyParser = require('body-parser'); // parser for post requests
 var Conversation = require('watson-developer-cloud/conversation/v1'); // watson sdk
 var request = require('request');
+var req = require('request');
+var dateTime = require('node-datetime');
+
+// required for Deploy to IBM Cloud support
+require('metrics-tracker-client').track();
 
 var app = express();
 var description = '';
@@ -28,7 +33,7 @@ var description = '';
 app.use(express.static('./public')); // load UI from public folder
 app.use(bodyParser.json());
 
-// Create the service wrapper
+// Create the Conversation service wrapper
 var conversation = new Conversation({
   // If unspecified here, the CONVERSATION_USERNAME and CONVERSATION_PASSWORD env properties will be checked
   // After that, the SDK will fall back to the bluemix-provided VCAP_SERVICES environment property
@@ -38,7 +43,6 @@ var conversation = new Conversation({
   version_date: '2016-10-21',
   version: 'v1'
 });
-
 
 
 // Endpoint to be call from the client side
@@ -59,139 +63,123 @@ app.post('/api/message', function (req, res) {
     // input: { text: input }
   };
 
+
   // Send the input to the conversation service
   conversation.message(payload, function (err, data) {
     if (err) {
       return res.status(err.code || 500).json(err);
     }
 
-    /*
-    console.log('##############################111\n');
-    console.log(JSON.stringify(data) + '\n');
-    console.log("data.input.text=" + data.input.text + '\n');
-    console.log("data.output.text[0]=" + data.output.text[0] + '\n');
-    console.log("data.output.text[1]=" + data.output.text[1] + '\n');
-    console.log("data.output.text[2]=" + data.output.text[2] + '\n');
-    console.log("data.context.newticket=" + data.context.newticket + '\n');
-    console.log("data.context.severity=" + data.context.severity + '\n');
-    console.log('desc=' + description + '\n');
-    console.log('##############################111\n');
-    */
-
     // to save the last problem description before opening a ticket
-    if (data.context.newticket === undefined & data.context.severity === undefined & data.output.text[0] == '' & data.output.text[1] == 'No quick resolution is available.' & data.output.text[2] == 'Do you want to create a new ticket?') {
+    if (data.context.newticket === undefined & data.context.severity === undefined & data.output.text[0] == 'The Virtual Agent has not been trained to answer your question/request. Please review the suggestions from Knowledge Base.' & data.output.text[1] == 'If the solutions from the Knowledge Base do not resolve your issue, a new ticket can be opened.' & data.output.text[2] == 'Do you want to create a new ticket?') {
       description = data.input.text;
-      console.log('description=' + description + '\n');
+      //console.log('description=' + description + '\n');
     }
 
-    // reset conversation service when end user selects to not open a new ticket
-    if (data.context.newticket == 'no') {
-      description = '';
-      data.context.newticket = undefined;
-      data.context.severity = undefined;
+    var runDiscovery = false;
+
+    // Call Discovery service REST API
+    if (!(data.entities === undefined | Object.keys(data.entities).length === 0)) {
+      if (!(data.entities[0].entity === 'Hardware' & data.entities[0].value === 'Computer') & !(data.entities[0].entity === 'Network' & data.entities[0].value === 'wireless')) {
+        if (data.context.discovered === undefined | data.context.discovered === false) {
+          if (data.context.newticket != 'no') {
+            runDiscovery = true;
+          }
+        }
+      }
     }
 
-    // if(data.output.text[0].includes("Asset-") & !data.output.text[0].includes('format'))
-    // if(false)
-    if (data.context.newticket & !(data.context.severity === undefined)) {
+    //console.log("runDiscovery=" + runDiscovery);
+    //console.log(data);
 
-      var assetNum = "1171AAG428C";
+    // call Discovery REST API
+    if (runDiscovery) {
       process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
-      /*
-      var maximo_rest_body = '<?xml version="1.0" encoding="UTF-8"?> \
-      <max:CreateMXSR \
-          xmlns:max="http://www.ibm.com/maximo" creationDateTime="2018-01-22T11:24:06" > \
-          <max:MXSRSet> \
-              <max:SR action="Create" > \
-                  <max:ASSETNUM changed="true">' + assetNum + '</max:ASSETNUM> \
-                  <max:ASSETORGID changed="true">IBM</max:ASSETORGID> \
-                  <max:ASSETSITEID changed="true">IBMSYSTM</max:ASSETSITEID> \
-                  <max:DESCRIPTION changed="true">' + description + '</max:DESCRIPTION> \
-                  <max:AFFECTEDPERSON changed="true">7A2657897</max:AFFECTEDPERSON> \
-                  <max:STATUS maxvalue="string" changed="false">NEW</max:STATUS> \
-                  <max:REPORTDATE changed="true">2018-01-22T11:24:06</max:REPORTDATE> \
-                  <max:REPORTEDBY changed="true">7A2657897</max:REPORTEDBY> \
-                  <max:CLASSSTRUCTUREID changed="true">99</max:CLASSSTRUCTUREID> \
-                  <max:REPORTEDPRIORITY changed="true">' + data.context.severity + '</max:REPORTEDPRIORITY> \
-              </max:SR> \
-          </max:MXSRSet> \
-      </max:CreateMXSR>'
-      */
-  
-      var maximo_rest_body = '<?xml version="1.0" encoding="UTF-8"?> \
-      <max:CreateMXSR \
-          xmlns:max="http://www.ibm.com/maximo" creationDateTime="2018-01-22T11:24:06" > \
-          <max:MXSRSet> \
-              <max:SR action="Create" > \
-                  <max:DESCRIPTION changed="true">' + description + '</max:DESCRIPTION> \
-                  <max:AFFECTEDPERSON changed="true">' + process.env.MAXIMO_PERSONID + '</max:AFFECTEDPERSON> \
-                  <max:STATUS maxvalue="string" changed="false">NEW</max:STATUS> \
-                  <max:REPORTDATE changed="true">2018-01-22T11:24:06</max:REPORTDATE> \
-                  <max:REPORTEDBY changed="true">' + process.env.MAXIMO_PERSONID + '</max:REPORTEDBY> \
-                  <max:CLASSSTRUCTUREID changed="true">99</max:CLASSSTRUCTUREID> \
-                  <max:REPORTEDPRIORITY changed="true">' + data.context.severity + '</max:REPORTEDPRIORITY> \
-              </max:SR> \
-          </max:MXSRSet> \
-      </max:CreateMXSR>'
-  
-          request({
-      
-        headers: {
-          'Authorization': process.env.MAXIMO_AUTH,
-          'Content-Type': process.env.MAXIMO_CONTEXT_TYPE,
-        },
+      callDiscovery(description).then(function (discovery_str) {
 
-        url: process.env.MAXIMO_REST_URL,
-        body: maximo_rest_body,
-        method: 'POST'
-      
-      }, function (err, resp, body) {
-        
-        var ticketidindex2 = body.search('</TICKETID>');
-        var ticketidindex1 = body.search('<TICKETID>');
-        var ticketid = body.substring(ticketidindex2, ticketidindex1 + 10);
-
-        console.log('##############################222\n');
-        console.log("TICKETID=" + ticketid + "\n");
-        console.log(body + '\n');
-        console.log('##############################222\n');
-
-        if (resp.body.includes('500')) {
-
-          // set output string
-          data.output.text[0] = data.output.text[0] + ' But, it failed when opening the new ticket.';
-
-          // reset
-          description = '';
-          data.context.severity = undefined;
-          data.context.newticket = undefined;
-
-          return res.json(updateMessage(payload, data));
-
-        }
-        else {
-
-          // set output string
-          data.output.text[0] = data.output.text[0] + ' TicketID=' + ticketid + ', Severity=' + data.context.severity + ' for issue: \"' + description + '\".' + '\n\n';
-
-          // reset
-          description = '';
-          data.context.severity = undefined;
-          data.context.newticket = undefined;
-
-          return res.json(updateMessage(payload, data));
-
+        // display search result of Discovery query through Conversation UI
+        if (discovery_str == '') {
+          data.output.text[0] = '<br><br>The Virtual Agent has not been trained to answer your question/request. <br><br>No relavant entry was found in Knowledge Base.  <br><br>';
+        } else {
+          data.output.text[0] = 'The Virtual Agent has not been trained to answer your question/request. <br><br>Knowledge Base has the following suggestions:  <br><br>';
+          data.output.text[0] = data.output.text[0] + discovery_str + '<br><br>';
         }
 
+        //console.log("=====================");
+        //console.log(data);
+
+        // set flag to not run Discovery next time
+        data.context.discovered = true;
+
+        return res.json(updateMessage(payload, data));
+
+      }).catch((error) => {
+        console.error(error);
+        console.error("Failed when calling Watson Discovery service");
       });
+
+    } else {
+
+      // reset conversation service when end user selects to not open a new ticket
+      if (data.context.newticket == 'no') {
+        description = '';
+        data.context.newticket = undefined;
+        data.context.severity = undefined;
+        data.context.discovered = false;
+      }
+
+      // call Maximo/ICD to create a new ticket
+      if (data.context.newticket & !(data.context.severity === undefined)) {
+
+        process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
+        callMaximo(description, data.context.severity).then(function (body) {
+
+          var ticketidindex2 = body.search('</TICKETID>');
+          var ticketidindex1 = body.search('<TICKETID>');
+          var ticketid = body.substring(ticketidindex2, ticketidindex1 + 10);
+
+          console.log('##############################222\n');
+          console.log("TICKETID=" + ticketid + "\n");
+          console.log(body + '\n');
+          console.log('##############################222\n');
+
+          // set output string
+          if (body.includes('500')) {
+            data.output.text[0] = data.output.text[0] + ' But, it failed when opening the new ticket.<br><br><br>';
+          }
+          else {
+            data.output.text[0] += ' TicketID=' + ticketid + ', Severity=' + data.context.severity + ' for issue: \"' + description + '\".' + '<br><br>';
+            var sr_link = process.env.MAXIMO_UI_URL + ticketid;
+            data.output.text[0] += '<html> <body> <a href=\"' + sr_link + '\" target=\"_blank\">To view the new ticket</a> </body> </html>' + '<br><br><br>';
+            
+          }
+
+          // reset context
+          description = '';
+          data.context.severity = undefined;
+          data.context.newticket = undefined;
+          data.context.discovered = false;
+
+          // send to Watson Assistant(Conversation_ service)
+          return res.json(updateMessage(payload, data));
+
+        }).catch((error) => {
+          console.error(error);
+          console.error("Failed when calling Maximo service");
+        });
+
+      }
+
+      else {
+        return res.json(updateMessage(payload, data));
+      }
 
     }
 
-    else
-      return res.json(updateMessage(payload, data));
-
   });
+
 });
 
 /**
@@ -229,4 +217,199 @@ function updateMessage(input, response) {
   return response;
 }
 
+/**
+ * Call Watson Discovery service to search knowledge base
+ * @param  string  query_str The query string to the Discovery service
+ * @return string            The related document entries returned by the Discovery service
+ */
+function callDiscovery(query_str) {
+
+  return new Promise((resolve, reject) => {
+
+    var discovery_str = '';
+    var discovery_query = '';
+
+    // Setup Watson Discovery query
+    discovery_query += process.env.DISCOVERY_URL;
+    discovery_query += '/environments/' + process.env.ENVIRONMENT_ID;
+    discovery_query += '/collections/' + process.env.COLLECTION_ID;
+    discovery_query += '/query?version=2017-11-07&deduplicate=false&highlight=true&passages=false&passages.count=5&natural_language_query=';
+    discovery_query += query_str;
+
+    // call Watson Discovery service
+    try {
+
+      request({
+
+        headers:
+          { 'content-type': 'application/json' },
+        //url: "https://gateway.watsonplatform.net/discovery/api/v1/environments/edb332ec-86b2-4611-9e0e-35692775a870/collections/ba7345fa-cd67-41c7-bfb0-245e6deb9cc8/query?version=2017-11-07&deduplicate=false&highlight=true&passages=false&passages.count=5&natural_language_query=mobile",
+        url: discovery_query,
+        method: "GET",
+        auth: {
+          user: process.env.DISCOVERY_USERNAME,
+          pass: process.env.DISCOVERY_PASSWORD
+        }
+      }, function (err, resp, body) {
+        if (err) {
+          resolve(err);
+        } else {
+          // process the search result of Discovery query
+          var resp_obj = JSON.parse(resp.body);
+          for (var i = 0; i < resp_obj.matching_results; i++) {
+            discovery_str += "Suggestion " + (i + 1).toString() + ":     " + resp_obj.results[i].body.trim() + "\n\n";
+            //console.log(resp_obj.results[i].body.trim());
+          }
+
+          //console.log("=====================");
+          //console.log(discovery_str);
+
+          resolve(discovery_str);
+        }
+
+      });
+
+    } catch (error) {
+      console.error(error);
+      console.error("Failed when calling Watson Discovery service");
+    }
+
+  });
+
+}
+
+/**
+ * Call Maximo/ICD system to create a ticket
+ * @param  string  description Ticket description
+ * @param  number  severity    Ticket severity
+ * @return string              Returned messages from Maximo call
+ */
+function callMaximo(description, severity) {
+
+  return new Promise((resolve, reject) => {
+
+    var dt = dateTime.create();
+    var formatted_now = dt.format('Y-m-dTH:M:S');
+
+    /*
+    var maximo_rest_body = '<?xml version="1.0" encoding="UTF-8"?> \
+    <max:CreateMXSR \
+        xmlns:max="http://www.ibm.com/maximo" creationDateTime="2018-01-22T11:24:06" > \
+        <max:MXSRSet> \
+            <max:SR action="Create" > \
+                <max:ASSETNUM changed="true">' + assetNum + '</max:ASSETNUM> \
+                <max:ASSETORGID changed="true">IBM</max:ASSETORGID> \
+                <max:ASSETSITEID changed="true">IBMSYSTM</max:ASSETSITEID> \
+                <max:DESCRIPTION changed="true">' + description + '</max:DESCRIPTION> \
+                <max:AFFECTEDPERSON changed="true">7A2657897</max:AFFECTEDPERSON> \
+                <max:STATUS maxvalue="string" changed="false">NEW</max:STATUS> \
+                <max:REPORTDATE changed="true">2018-01-22T11:24:06</max:REPORTDATE> \
+                <max:REPORTEDBY changed="true">7A2657897</max:REPORTEDBY> \
+                <max:CLASSSTRUCTUREID changed="true">99</max:CLASSSTRUCTUREID> \
+                <max:REPORTEDPRIORITY changed="true">' + data.context.severity + '</max:REPORTEDPRIORITY> \
+            </max:SR> \
+        </max:MXSRSet> \
+    </max:CreateMXSR>'
+    */
+
+    // Calling ICD/Maximo REST API to open ticket
+    var maximo_rest_body = '<?xml version="1.0" encoding="UTF-8"?> \
+        <max:CreateMXSR \
+            xmlns:max="http://www.ibm.com/maximo" creationDateTime="' + formatted_now + '" > \
+            <max:MXSRSet> \
+                <max:SR action="Create" > \
+                    <max:DESCRIPTION changed="true">' + description + '</max:DESCRIPTION> \
+                    <max:AFFECTEDPERSON changed="true">' + process.env.MAXIMO_PERSONID + '</max:AFFECTEDPERSON> \
+                    <max:STATUS maxvalue="string" changed="false">NEW</max:STATUS> \
+                    <max:REPORTDATE changed="true">' + formatted_now + '</max:REPORTDATE> \
+                    <max:REPORTEDBY changed="true">' + process.env.MAXIMO_PERSONID + '</max:REPORTEDBY> \
+                    <max:CLASSSTRUCTUREID changed="true">21</max:CLASSSTRUCTUREID> \
+                    <max:REPORTEDPRIORITY changed="true">' + severity + '</max:REPORTEDPRIORITY> \
+                </max:SR> \
+            </max:MXSRSet> \
+        </max:CreateMXSR>'
+
+    console.log(maximo_rest_body);
+
+    try {
+
+      request({
+
+        headers: {
+          // For Application Server Authentication (LDAP)
+          'Authorization': process.env.MAXIMO_AUTH,
+          // For Native Maximo Authentication
+          'MAXAUTH': process.env.MAXIMO_AUTH,
+          'Content-Type': process.env.MAXIMO_CONTEXT_TYPE,
+        },
+
+        url: process.env.MAXIMO_REST_URL,
+        body: maximo_rest_body,
+        method: 'POST'
+
+      }, function (err, resp, body) {
+        if (err) {
+          resolve(err);
+        } else {
+          //console.log("=====================");
+          //console.log(body);
+
+          resolve(body);
+
+        }
+
+      });
+
+    } catch (error) {
+      console.error(error);
+      console.error("Failed when calling Maximo service");
+    }
+
+  });
+
+}
+
+
+
+/**
+ * Updates the response text using the intent confidence
+ * @param  string  query_str The query string to the Discovery service
+ * @return string            The related documents returned by the Discovery service
+ */
+/*
+async function callDiscovery_no(query_str, req, res) {
+  console.log("++++++++++++++++++");
+  console.log(query_str);
+  console.log("++++++++++++++++++");
+
+  var discovery_str = await discovery.query(
+    {
+      environment_id: process.env.ENVIRONMENT_ID,
+      collection_id: process.env.COLLECTION_ID,
+      query: query_str
+    },
+    function (err, response) {
+      if (err) {
+        console.error(err);
+      } else {
+        var discovered_s = '';
+        // process discovered content
+        //console.log(JSON.stringify(response, null, 2));
+
+        for (var i = 0; i < response.matching_results; i++) {
+          discovered_s += "Suggestion " + (i + 1).toString() + ":     " + response.results[i].body.trim() + "\n\n";
+          //console.log(response.results[i].body.trim());
+        }
+
+        return discovered_s;
+      }
+    }
+  );
+
+}
+*/
+
+
 module.exports = app;
+
+
