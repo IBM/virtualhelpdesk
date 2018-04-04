@@ -5,7 +5,7 @@
 # Virtual HelpDesk using IBM Watson Assistant, Discovery service & Maximo/IBM Control Desk
 This Node.js application demonstrates how to build a `Virtual HelpDesk`, and use the Watson Assistant(Conversation) and Discovery services to interact with end users for simple Q/A. With proper training, Assistant(Conversation) service can cover most of common questions/requests. When it is not been trained to address end users' specific question, the virtual agent searches in the knowledge base through Watson Discovery service and presents relevant entries to the end user. If the end user is still not satisfied, a new ticket is created in a back-office ticketing system, such as Maximo/IBM Control Desk(ICD) system.
 
-![Demo](readme_images/ticketbot.PNG)
+![Demo](readme_images/ticketbot.png)
 
 
 <br>
@@ -18,7 +18,7 @@ This Node.js application demonstrates how to build a `Virtual HelpDesk`, and use
 1. If no relevant information is found in the knowledge base or the relevant information from knowledge base does not satify end users, the Virtual HelpDesk opens a new ticket in back-office ticketing system.
 1. Back-office ticketing system takes over the support task.
 
-![Demo](readme_images/architecture.PNG)
+![Demo](readme_images/architecture.png)
 
 
 <br>
@@ -36,7 +36,7 @@ Want to take your Watson app to the next level? Looking to leverage Watson Brand
 * [IBM Watson Discovery](https://www.ibm.com/watson/developercloud/discovery.html): A cognitive search and content analytics engine for applications to identify patterns, trends, and actionable insights.
 * [Maximo/IBM Control Desk(ICD)](https://www-01.ibm.com/software/applications/control-desk/): Back-office ticketing system. Other ticketing system can be used alternatively.
 
-![Demo](readme_images/VirtualHelpDeskComponents.PNG)
+![Demo](readme_images/VirtualHelpDeskComponents.png)
 
 
 <br>
@@ -49,7 +49,7 @@ Want to take your Watson app to the next level? Looking to leverage Watson Brand
 
 # Watch the Video
 
-[![](readme_images/PlayVideo.PNG)](https://youtu.be/MjyX6vntejI)
+[![](readme_images/PlayVideo.png)](https://youtu.be/MjyX6vntejI)
 
 
 <br>
@@ -185,7 +185,7 @@ Watson Discovery service is to be setup to search in the knowledge base when the
 
 1. Click `Drag and drop your documents here or browse from computer` section
 
-    ![](readme_images/discovery_ingest.PNG)
+    ![](readme_images/discovery_ingest.png)
 
 1. Select three JSON files from local file system where you downloaded and upzipped knowledgebase.zip file
 
