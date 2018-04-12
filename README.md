@@ -5,7 +5,7 @@
 # Virtual HelpDesk using IBM Watson Assistant, Discovery service & Maximo/IBM Control Desk
 This Node.js application demonstrates how to build a `Virtual HelpDesk`, and use the Watson Assistant(Conversation) and Discovery services to interact with end users for simple Q/A. With proper training, Assistant(Conversation) service can cover most of common questions/requests. When it is not been trained to address end users' specific question, the virtual agent searches in the knowledge base through Watson Discovery service and presents relevant entries to the end user. If the end user is still not satisfied, a new ticket is created in a back-office ticketing system, such as Maximo/IBM Control Desk(ICD) system.
 
-![Demo](readme_images/ticketbot.png)
+![Demo](doc/source/images/ticketbot.png)
 
 
 <br>
@@ -18,7 +18,7 @@ This Node.js application demonstrates how to build a `Virtual HelpDesk`, and use
 1. If no relevant information is found in the knowledge base or the relevant information from knowledge base does not satify end users, the Virtual HelpDesk opens a new ticket in back-office ticketing system.
 1. Back-office ticketing system takes over the support task.
 
-![Demo](readme_images/architecture.png)
+![Demo](doc/source/images/architecture.png)
 
 
 <br>
@@ -36,7 +36,7 @@ Want to take your Watson app to the next level? Looking to leverage Watson Brand
 * [IBM Watson Discovery](https://www.ibm.com/watson/developercloud/discovery.html): A cognitive search and content analytics engine for applications to identify patterns, trends, and actionable insights.
 * [Maximo/IBM Control Desk(ICD)](https://www-01.ibm.com/software/applications/control-desk/): Back-office ticketing system. Other ticketing system can be used alternatively.
 
-![Demo](readme_images/VirtualHelpDeskComponents.png)
+![Demo](doc/source/images/VirtualHelpDeskComponents.png)
 
 
 <br>
@@ -49,7 +49,7 @@ Want to take your Watson app to the next level? Looking to leverage Watson Brand
 
 # Watch the Video
 
-[![](readme_images/PlayVideo.png)](https://youtu.be/MjyX6vntejI)
+[![](doc/source/images/PlayVideo.png)](https://youtu.be/MjyX6vntejI)
 
 
 <br>
@@ -116,7 +116,7 @@ Slots are configured in the Assistant(Conversation) service to collect additiona
 
 1. From the **All Items** tab, click the newly created Assistant(Conversation) service in the `Cloud Foundar Services` list.
 
-    ![Screen capture of Services list](readme_images/conversation_service.png)
+    ![Screen capture of Services list](doc/source/images/conversation_service.png)
 
 1. On the next page, click `Launch tool`.
 
@@ -174,18 +174,18 @@ Watson Discovery service is to be setup to search in the knowledge base when the
 1. Navigate to your Discovery instance in your Bluemix dashboard
 
 1. Click `Launch tool`
-  ![](readme_images/discovery_tooling.png)
+  ![](doc/source/images/discovery_tooling.png)
 
 1. Create a new data collection, name it whatever you like, and select the default configuration.
 
-    ![](readme_images/discovery_collection.png)
+    ![](doc/source/images/discovery_collection.png)
 
 1. After you're done, a new private collection is displayed in the UI  
-  ![](readme_images/myCollection.png)
+  ![](doc/source/images/myCollection.png)
 
 1. Click `Drag and drop your documents here or browse from computer` section
 
-    ![](readme_images/discovery_ingest.png)
+    ![](doc/source/images/discovery_ingest.png)
 
 1. Select three JSON files from local file system where you downloaded and upzipped knowledgebase.zip file
 
@@ -200,7 +200,7 @@ If you don't have an available in-house Maximo/ICD system to integrate with Wats
 
 You may request [a trial ICD SaaS system](https://www.ibm.com/us-en/marketplace/it-service-management) at no cost. Click the `Free 30-day trial` link and follow the procedure. It may take a while for the system orchestration to complete.
 
-![Screen capture of workspace tile menu](readme_images/ICD_trial.png)
+![Screen capture of workspace tile menu](doc/source/images/ICD_trial.png)
 
 After the trial ICD SaaS system is active, you should receive an email for your trial ICD system.
 
@@ -217,11 +217,11 @@ After the trial ICD SaaS system is active, you should receive an email for your 
 
 Click [Products and Services](https://myibm.ibm.com/products-services/) link in the email to navigate to your Products and service home page. One of trial offers is `IBM Control Desk on Cloud Trial`.
 
-![Screen capture of workspace tile menu](readme_images/ICD_trial_active.png)
+![Screen capture of workspace tile menu](doc/source/images/ICD_trial_active.png)
 
 Click `Manage` button to review the Overview page of your trial ICD system. In the navigation pane on the left, select `Usage instructions`.
 
-![Screen capture of workspace tile menu](readme_images/ICD_trial_info.png)
+![Screen capture of workspace tile menu](doc/source/images/ICD_trial_info.png)
 
 Default account information is displayed on `Usage instructions` page. Take a note of password for maxadmin account for further code pattern configuration.
 
@@ -293,9 +293,9 @@ Use GitHub to clone the repository locally,
 
 1. Click the menu icon in the upper-right corner of the workspace tile, and then select **View details**.
 
-    ![Screen capture of workspace tile menu](readme_images/workspace_details.png)
+    ![Screen capture of workspace tile menu](doc/source/images/workspace_details.png)
 
-1. Click the ![Copy](readme_images/copy_icon.png) icon to copy the workspace ID to the clipboard.
+1. Click the ![Copy](doc/source/images/copy_icon.png) icon to copy the workspace ID to the clipboard.
 
 1. On the local system, paste the workspace ID into the WORKSPACE_ID variable in the `.env` file. 
 
@@ -343,11 +343,11 @@ Use GitHub to clone the repository locally,
 
 1. Locate the `collection info` section, 
 
-    ![Screen capture of workspace tile menu](readme_images/discovery_view_collection.png)
+    ![Screen capture of workspace tile menu](doc/source/images/discovery_view_collection.png)
 
 1. click `Use this collection in API` link to display the collection information.
 
-    ![Screen capture of workspace tile menu](readme_images/discovery_collection_detail.png)
+    ![Screen capture of workspace tile menu](doc/source/images/discovery_collection_detail.png)
 
 1. Copy and paste Collection ID and Environment ID to the corresponding variable in the `.env` file. 
 
@@ -433,7 +433,7 @@ The virtual agent will do its best to address the issue, for example
 * Please reboot your machine
 * Please power off wireless router in the conference room, waiting one minute and power it on
 
-    ![Screen capture of workspace tile menu](readme_images/conversation_deliver.png)
+    ![Screen capture of workspace tile menu](doc/source/images/conversation_deliver.png)
 
 
 <br>
@@ -447,7 +447,7 @@ For example, when you enter
 
 in the Q/A session, the virtual agent may return suggestion(s) depending on information in your knowledge base.
 
-![Screen capture of workspace tile menu](readme_images/discovery_rescue.png)
+![Screen capture of workspace tile menu](doc/source/images/discovery_rescue.png)
 
 If the entries from the knowledge base does not provide sufficient information, end users have option to open ticket.
 
@@ -479,7 +479,7 @@ After you specify the ticket severity (high, medium and low), the virtual agent 
 
 * Thank you for contacting IT help desk. A new ticket is opened. `TicketID=365392, Severity=1 for issue: "how to program in java"`.
 
-![Screen capture of workspace tile menu](readme_images/straightTicket.png)
+![Screen capture of workspace tile menu](doc/source/images/straightTicket.png)
 
 As the REST API is widely available, this app can be used to integrate Waston Assistant(Conversation) and Discovery service with most of back-office ticketing systems. Integrates with IBM Control Desk/Maximo is provided as an example in the code.
 
