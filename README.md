@@ -91,7 +91,7 @@ Watson Assistant(Conversation) service is used to provide underline infrastructu
 
 ### Creating an Assistant(Conversation) service
 
-Watson Assistant(Conversation) service is to be setup to simulate help desk level 1 activities. For topics that the virtual agent has been trained, it can help end users interactively. For subjects that the virtual agent does not understand, it searches the knowledge base through Discovery service, collects information from end user and creates a new ticket in back-oofice ticketing system, for example Maximo/ICD, if necessary.
+Watson Assistant(Conversation) service is to be setup to simulate help desk level 1 activities. For topics that the virtual agent has been trained, it can help end users interactively. For subjects that the virtual agent does not understand, it searches the knowledge base through Discovery service, collects information from end user and creates a new ticket in back-office ticketing system, for example Maximo/ICD, if necessary.
 
 Slots are configured in the Assistant(Conversation) service to collect additional information from end users.
 
@@ -187,7 +187,7 @@ Watson Discovery service is to be setup to search in the knowledge base when the
 
     ![](doc/source/images/discovery_ingest.png)
 
-1. Select three JSON files from local file system where you downloaded and upzipped knowledgebase.zip file
+1. Select three JSON files from local file system where you downloaded and unzipped knowledgebase.zip file
 
   - This may take a few seconds -- you will see a notification when the process is finished
 
@@ -358,19 +358,19 @@ Use GitHub to clone the repository locally,
 
 ### Configuring the Maximo/ICD environment
 
-1. Set MAXIMO_AUTH environment variable in file .env. This variable setting depends on how Maximo/ICD authentication is configured.
+1. Set `MAXIMO_AUTH` environment variable in file .env. This variable setting depends on how Maximo/ICD authentication is configured.
 
     * `Application Server Authentication (LDAP)` - In this case, the variable has two parts separated by a blank space. The first part is the value "Basic". The second part is `user:password` base64 encoded. You can get its value through any online base64 encoder based on your ICD/Maximo user:password.
 
     * `Native Maximo Authentication` - In this case, the variable has one part only. It is `user:password` base64 encoded. You can get its value through any online base64 encoder based on your ICD/Maximo user:password. Note, the trial ICD SaaS system has navive Maximo authentication.
 
-1. Keep "application/json" as the value of MAXIMO_CONTEXT_TYPE environment variable.
+1. Keep "application/json" as the value of `MAXIMO_CONTEXT_TYPE` environment variable.
 
-1. Modify the hostname portion of MAXIMO_REST_URL environment variable to point to your ICD/Maximo system. If you are connecting to trial ICD system, you may have to modify its context root as well. For example, if the URL used to login to the trial ICD system is https://siwr35cdwsa-tr3.sccd.ibmserviceengage.com/maximo_t4hj, the URL in the .env file will be https://siwr35cdwsa-tr3.sccd.ibmserviceengage.com/meaweb_t4hj/os/MXSR.
+1. Modify the hostname portion of `MAXIMO_REST_URL` environment variable to point to your ICD/Maximo system. If you are connecting to trial ICD system, you may have to modify its context root as well. For example, if the URL used to login to the trial ICD system is https://siwr35cdwsa-tr3.sccd.ibmserviceengage.com/maximo_t4hj, the URL in the .env file will be https://siwr35cdwsa-tr3.sccd.ibmserviceengage.com/meaweb_t4hj/os/MXSR.
 
-1. Set MAXIMO_PERSONID environment variable to a valid person ID in your ICD/Maximo system. For example, MAXADMIN. Note, the person ID is typically case sensitive.
+1. Set `MAXIMO_PERSONID` environment variable to a valid person ID in your ICD/Maximo system. For example, MAXADMIN. Note, the person ID is typically case sensitive.
 
-1. Set MAXIMO_UI_URL environment variable in the similar way as you have done for MAXIMO_REST_URL environment variable. Change its hostname and context root.
+1. Set `MAXIMO_UI_URL` environment variable in the similar way as you have done for `MAXIMO_REST_URL` environment variable. Change its hostname and context root.
 
     ```bash
     # For Application Server Authentication (LDAP)
