@@ -26,6 +26,20 @@ var dateTime = require('node-datetime');
 var app = express();
 var description = '';
 
+// for automatically deploying to IBM Cloud
+const fs = require('fs'); // file system for loading JSON;
+var Discovery = require('watson-developer-cloud/discovery/v1');
+const WatsonDiscoverySetup = require('./lib/watson-discovery-setup');
+const WatsonConversationSetup = require('./lib/watson-conversation-setup');
+const DISCOVERY_ACTION = 'rnr'; // Replaced RnR w/ Discovery but Assistant action is still 'rnr'.
+const DISCOVERY_DOCS = [
+  './training/icd_001.json',
+  './training/icd_002.json',
+  './training/icd_003.json'
+];
+const DEFAULT_NAME_C = 'Conversation-ICD';
+const DEFAULT_NAME_D = 'Discovery-ICD';
+
 // Bootstrap application settings
 app.use(express.static('./public')); // load UI from public folder
 app.use(bodyParser.json());
@@ -41,6 +55,43 @@ var conversation = new Conversation({
   version: 'v1'
 });
 
+// for automatically deploying to IBM Cloud
+let workspaceID; // workspaceID will be set when the workspace is created or validated.
+const conversationSetup = new WatsonConversationSetup(conversation);
+const workspaceJson = JSON.parse(fs.readFileSync('./training/ITSM_workspace.json'));
+const conversationSetupParams = { default_name: DEFAULT_NAME_C, workspace_json: workspaceJson };
+conversationSetup.setupConversationWorkspace(conversationSetupParams, (err, data) => {
+  if (err) {
+    handleSetupError(err);
+  } else {
+    console.log('Watson Assistant is ready!');
+    workspaceID = data;
+  }
+});
+
+// Create the Discovery service wrapper
+var discovery = new Discovery({
+  // if left unspecified here, the SDK will fall back to the DISCOVERY_USERNAME and DISCOVERY_PASSWORD
+  // environment properties, and then Bluemix's VCAP_SERVICES environment property
+  // username: 'INSERT YOUR USERNAME FOR THE SERVICE HERE',
+  // password: 'INSERT YOUR PASSWORD FOR THE SERVICE HERE'
+  // url: 'INSERT YOUR URL FOR THE SERVICE HERE'
+  version_date: '2017-09-01',
+  url: 'https://gateway.watsonplatform.net/discovery/api/'
+});
+
+// for automatically deploying to IBM Cloud
+let discoveryParams; // discoveryParams will be set after Discovery is validated and setup.
+const discoverySetup = new WatsonDiscoverySetup(discovery);
+const discoverySetupParams = { default_name: DEFAULT_NAME_D, documents: DISCOVERY_DOCS };
+discoverySetup.setupDiscovery(discoverySetupParams, (err, data) => {
+  if (err) {
+    handleSetupError(err);
+  } else {
+    console.log('Discovery is ready!');
+    discoveryParams = data;
+  }
+});
 
 // Endpoint to be call from the client side
 app.post('/api/message', function (req, res) {
