@@ -23,9 +23,6 @@ var request = require('request');
 var req = require('request');
 var dateTime = require('node-datetime');
 
-// required for Deploy to IBM Cloud support
-require('metrics-tracker-client').track();
-
 var app = express();
 var description = '';
 
