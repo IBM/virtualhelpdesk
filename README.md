@@ -1,14 +1,10 @@
-[![Build Status](https://travis-ci.org/IBM/VirtualHelpDesk.svg?branch=master)](https://travis-ci.org/IBM/VirtualHelpDesk)[![Build Status]
-![Bluemix Deployments](https://metrics-tracker.mybluemix.net/stats/527357940ca5e1027fbf945add3b15c4/badge.svg)
-
+[![Build Status](https://travis-ci.org/IBM/virtualhelpdesk.svg?branch=master)](https://travis-ci.org/IBM/virtualhelpdesk)
 
 # Virtual HelpDesk using IBM Watson Assistant, Discovery service & Maximo/IBM Control Desk
-This Node.js application demonstrates how to build a `Virtual HelpDesk`, and use the Watson Assistant(Conversation) and Discovery services to interact with end users for simple Q/A. With proper training, Assistant(Conversation) service can cover most of common questions/requests. When it is not been trained to address end users' specific question, the virtual agent searches in the knowledge base through Watson Discovery service and presents relevant entries to the end user. If the end user is still not satisfied, a new ticket is created in a back-office ticketing system, such as Maximo/IBM Control Desk(ICD) system.
+
+This Node.js application demonstrates how to build a `Virtual HelpDesk`, and use the Watson Assistant (formerly Conversation) and Discovery services to interact with end users for simple Q/A. With proper training, Assistant service can cover most of common questions/requests. When it is not been trained to address end users' specific question, the virtual agent searches in the knowledge base through Watson Discovery service and presents relevant entries to the end user. If the end user is still not satisfied, a new ticket is created in a back-office ticketing system, such as Maximo/IBM Control Desk(ICD) system.
 
 ![Demo](doc/source/images/ticketbot.png)
-
-
-<br>
 
 ## Flow
 1. The knowledge base documents are added to the Discovery collection.
@@ -20,16 +16,6 @@ This Node.js application demonstrates how to build a `Virtual HelpDesk`, and use
 
 ![Demo](doc/source/images/architecture.png)
 
-
-<br>
-
-## With Watson
-
-Want to take your Watson app to the next level? Looking to leverage Watson Brand assets? Join the [With Watson](https://www.ibm.com/watson/with-watson) program which provides exclusive brand, marketing, and tech resources to amplify and accelerate your Watson embedded commercial solution.
-
-
-<br>
-
 ## Included components
 
 * [IBM Watson Assistant](https://www.ibm.com/watson/developercloud/conversation.html): Build, test and deploy a bot or virtual agent across mobile devices, messaging platforms, or even on a physical robot.
@@ -38,83 +24,56 @@ Want to take your Watson app to the next level? Looking to leverage Watson Brand
 
 ![Demo](doc/source/images/VirtualHelpDeskComponents.png)
 
-
-<br>
-
 ## Featured technologies
 * [Cognitive](https://developer.ibm.com/watson/): Watson is a cognitive technology that can think like a human.
 * [Node.js](https://nodejs.org/en/): An asynchronous event driven JavaScript runtime, designed to build scalable applications.
-
-<br>
 
 # Watch the Video
 
 [![](doc/source/images/PlayVideo.png)](https://youtu.be/MjyX6vntejI)
 
-
-<br>
-
 # Steps
-
 
 ## Deploy to IBM Cloud
 
-[![Deploy to IBM Cloud](https://metrics-tracker.mybluemix.net/stats/5fd641e32af04e4adb16f26c46de3587/button.svg)](https://bluemix.net/deploy?repository=https://github.com/IBM/VirtualHelpDesk)
-
-
-
-
-
-
-
-<br>
+[![Deploy to IBM Cloud](https://bluemix.net/deploy/button.png)](https://bluemix.net/deploy?repository=https://github.com/IBM/virtualhelpdesk)
 
 ## Before you begin
 
-* Create a Bluemix account
-    * [Sign up][sign_up] in Bluemix, or use an existing account. Your account must have available space for at least 1 app and 1 service.
+* Create an IBM Cloud account -- [Sign up](https://console.bluemix.net/registration/) for IBM Cloud, or use an existing account. Your account must have available space for at least one app and two Watson services.
+
 * Make sure that you have the following prerequisites installed:
-    * The [Node.js](https://nodejs.org/#download) runtime, including the [npm][npm_link] package manager
-    * The [Cloud Foundry][cloud_foundry] command-line client
+    * The [Node.js](https://nodejs.org/#download) runtime, including the [NPM](https://www.npmjs.com) package manager.
+    * The [Cloud Foundry](https://github.com/cloudfoundry/cli#downloads) CLI.
 
-      Note: Ensure that you Cloud Foundry version is up to date
+## Setting up Assistant service
 
+The Watson Assistant service is used to provide underline infrastructure for the virtual agent in this code pattern.
 
-<br>
+### Creating an Assistant service
 
-## Setting up Assistant(Conversation) service
+Watson Assistant service is to be setup to simulate help desk level 1 activities. For topics that the virtual agent has been trained, it can help end users interactively. For subjects that the virtual agent does not understand, it searches the knowledge base through Discovery service, collects information from end user and creates a new ticket in back-office ticketing system, for example Maximo/ICD, if necessary.
 
-Watson Assistant(Conversation) service is used to provide underline infrastructure for the virtual agent in this code pattern.
-
-
-<br>
-
-### Creating an Assistant(Conversation) service
-
-Watson Assistant(Conversation) service is to be setup to simulate help desk level 1 activities. For topics that the virtual agent has been trained, it can help end users interactively. For subjects that the virtual agent does not understand, it searches the knowledge base through Discovery service, collects information from end user and creates a new ticket in back-office ticketing system, for example Maximo/ICD, if necessary.
-
-Slots are configured in the Assistant(Conversation) service to collect additional information from end users.
+Slots are configured in the Assistant service to collect additional information from end users.
 
 1. At the command line, go to the local project directory (`vaticketbot`).
 
-1. Connect to Bluemix with the Cloud Foundry command-line tool. For more information, see the Watson Developer Cloud [documentation][cf_docs].
+1. Connect to IBM Cloud with the Cloud Foundry command-line tool. For more information, see the [IBM Cloud documentation](https://console.bluemix.net/docs/cli/reference/cfcommands/index.html).
     ```bash
     cf login
     ```
 
-1. Create an instance of the Assistant(Conversation) service in Bluemix. For example:
+1. Create an instance of the Assistant service in IBM Cloud. For example:
 
     ```bash
     cf create-service conversation free my-conversation-service
     ```
 
-<br>
+### Importing the Assistant workspace
 
-### Importing the Assistant(Conversation) workspace
+1. In your browser, navigate to the [IBM Cloud console](https://console.ng.bluemix.net/dashboard/services).
 
-1. In your browser, navigate to [your Bluemix console] (https://console.ng.bluemix.net/dashboard/services).
-
-1. From the **All Items** tab, click the newly created Assistant(Conversation) service in the `Cloud Foundar Services` list.
+1. From the **All Items** tab, click the newly created Assistant service in the `Cloud Foundry Services` list.
 
     ![Screen capture of Services list](doc/source/images/conversation_service.png)
 
@@ -122,7 +81,7 @@ Slots are configured in the Assistant(Conversation) service to collect additiona
 
 1. In the Watson Assistant page, navigate to `Workspace` tab.
 
-1. Click the `Import workspace` icon on the top of the Assistant(Conversation) Workspaces. 
+1. Click the `Import workspace` icon on the top of the Assistant workspaces. 
 
 1. Specify the location of the workspace JSON file in your local copy of the app project:
 
@@ -132,15 +91,9 @@ Slots are configured in the Assistant(Conversation) service to collect additiona
 
 1. The sample ITSM workspace is created.
 
-
-<br>
-
 ## Setting up Discovery service
 
-Watson Discovery service is used to provide underline infrastructure in this code pattern when searching in knowledge base.
-
-
-<br>
+The Watson Discovery service is used to provide underline infrastructure in this code pattern when searching in knowledge base.
 
 ### Creating a Discovery service
 
@@ -148,57 +101,52 @@ Watson Discovery service is to be setup to search in the knowledge base when the
 
 1. At the command line, go to the local project directory (`vaticketbot`).
 
-1. Connect to Bluemix with the Cloud Foundry command-line tool. For more information, see the Watson Developer Cloud [documentation][cf_docs].
+1. Connect to IBM Cloud with the Cloud Foundry command-line tool. 
     ```bash
     cf login
     ```
 
-1. Create an instance of the Discovery service in Bluemix. For example:
+1. Create an instance of the Discovery service in IBM Cloud. For example:
 
     ```bash
     cf create-service discovery lite my-discovery-service
     ```
 
-1. Check the status of Discovery service instance in Bluemix, if necessary
+1. Check the status of Discovery service instance in IBM Cloud, if necessary
 
     ```bash
     cf services
     ```
 
-<br>
-
 ### Creating a collection and ingesting documents into Discovery service
 
-1. Download and unzip the [knowledgebase.zip](training/knowledgebase.zip) in this repo to reveal a set of JSON documents
+1. Download and unzip the [`knowledgebase.zip`](training/knowledgebase.zip) in this repo to reveal a set of JSON documents
 
-1. Navigate to your Discovery instance in your Bluemix dashboard
+1. Navigate to your Discovery instance in your IBM Cloud dashboard
 
 1. Click `Launch tool`
-  ![](doc/source/images/discovery_tooling.png)
+
+    ![](doc/source/images/discovery_tooling.png)
 
 1. Create a new data collection, name it whatever you like, and select the default configuration.
 
     ![](doc/source/images/discovery_collection.png)
 
 1. After you're done, a new private collection is displayed in the UI  
-  ![](doc/source/images/myCollection.png)
+
+    ![](doc/source/images/myCollection.png)
 
 1. Click `Drag and drop your documents here or browse from computer` section
 
     ![](doc/source/images/discovery_ingest.png)
 
-1. Select three JSON files from local file system where you downloaded and unzipped knowledgebase.zip file
-
-  - This may take a few seconds -- you will see a notification when the process is finished
-
-
-<br>
+1. Select three JSON files from local file system where you downloaded and unzipped `knowledgebase.zip` file. This may take a few seconds, you will see a notification when the process is finished
 
 ## Setting up trial IBM Control Desk SaaS system
 
 If you don't have an available in-house Maximo/ICD system to integrate with Watson services in this code pattern, you may request a trial ICD SaaS system.
 
-You may request [a trial ICD SaaS system](https://www.ibm.com/us-en/marketplace/it-service-management) at no cost. Click the `Free 30-day trial` link and follow the procedure. It may take a while for the system orchestration to complete.
+You may request a [trial ICD SaaS system](https://www.ibm.com/us-en/marketplace/it-service-management) at no cost. Click the `Free 30-day trial` link and follow the procedure. It may take a while for the system orchestration to complete.
 
 ![Screen capture of workspace tile menu](doc/source/images/ICD_trial.png)
 
@@ -239,34 +187,29 @@ click `Launch` button to bring up ICD login screen. Note down the login page URL
 
 Login to your trail ICD SaaS system and verify it's working.
 
-
-<br>
-
 ## Installing locally
 
-If you want to modify the app or use it as a basis for building your own app, install it locally. You can then deploy your modified version of the app to the Bluemix cloud.
-
-
-<br>
+If you want to modify the app or use it as a basis for building your own app, install it locally. You can then deploy your modified version of the app to IBM Cloud.
 
 ### Getting the files
 
-Use GitHub to clone the repository locally, 
+Use GitHub to clone the repository locally. In a terminal, run:
 
+   ```bash
+   git clone https://github.com/ibm/virtualhelpdesk
+   ```
 
-<br>
-
-### Configuring the Assistant(Conversation) service environment
+### Configuring the Watson Assistant service environment
 
 1. Copy the `.env.example` file and create a new `.env` file.
 
-1. In the Bluemix with the Cloud Foundry command-line tool, create a service key for the Assistant(Conversation) service in the format `cf create-service-key <service_instance> <service_key>`. For example:
+1. In IBM Cloud with the Cloud Foundry command-line tool, create a service key for the Assistant service in the format `cf create-service-key <service_instance> <service_key>`. For example:
 
     ```bash
     cf create-service-key my-conversation-service myKey
     ```
 
-1. Retrieve the credentials from the service key of the Assistant(Conversation) service using the command `cf service-key <service_instance> <service_key>`. For example:
+1. Retrieve the credentials from the service key of the Assistant service using the command `cf service-key <service_instance> <service_key>`. For example:
 
     ```bash
     cf service-key my-conversation-service myKey
@@ -274,7 +217,7 @@ Use GitHub to clone the repository locally,
 
    The output from this command is a JSON object, as in this example:
 
-    ```bash
+    ```JSON
     {
       "password": "87iT7aqpvU7l",
       "url": "https://gateway.watsonplatform.net/conversation/api",
@@ -289,7 +232,7 @@ Use GitHub to clone the repository locally,
     CONVERSATION_PASSWORD=87iT7aqpvU7l
     ```
 
-1. In your Bluemix console, open the Assistant(Conversation) service instance where you imported the workspace.
+1. In the IBM Cloud console, open the Assistant service instance where you imported the workspace.
 
 1. Click the menu icon in the upper-right corner of the workspace tile, and then select **View details**.
 
@@ -301,18 +244,15 @@ Use GitHub to clone the repository locally,
 
 1. Save the file.
 
-
-<br>
-
 ### Configuring the Discovery service environment
 
-1. In the Bluemix with the Cloud Foundry command-line tool, create a service key for the Discovery service in the format `cf create-service-key <service_instance> <service_key>`. For example:
+1. With the Cloud Foundry command-line tool, create a service key for the Discovery service in the format `cf create-service-key <service_instance> <service_key>`. For example:
 
     ```bash
     cf create-service-key my-discovery-service myKey
     ```
 
-1. Retrieve the credentials from the service key of the Assistant(Conversation) service using the command `cf service-key <service_instance> <service_key>`. For example:
+1. Retrieve the credentials from the service key of the Assistant service using the command `cf service-key <service_instance> <service_key>`. For example:
 
     ```bash
     cf service-key my-discovery-service myKey
@@ -320,8 +260,7 @@ Use GitHub to clone the repository locally,
 
    The output from this command is a JSON object, as in this example:
 
-    ```bash
-    JSON
+    ```JSON
     {
         "password": "E8CCHs37pUwj",
         "url": "https://gateway.watsonplatform.net/discovery/api",
@@ -337,7 +276,7 @@ Use GitHub to clone the repository locally,
     DISCOVERY_URL=https://gateway.watsonplatform.net/discovery/api/v1
     ```
 
-1. In your Bluemix console, open your Discovery service instance.
+1. In the IBM Cloud console, open your Discovery service instance.
 
 1. Open the Collection in your Discovery service.
 
@@ -353,9 +292,6 @@ Use GitHub to clone the repository locally,
 
 1. Save the file.
 
-
-<br>
-
 ### Configuring the Maximo/ICD environment
 
 1. Set `MAXIMO_AUTH` environment variable in file .env. This variable setting depends on how Maximo/ICD authentication is configured.
@@ -366,7 +302,7 @@ Use GitHub to clone the repository locally,
 
 1. Keep "application/json" as the value of `MAXIMO_CONTEXT_TYPE` environment variable.
 
-1. Modify the hostname portion of `MAXIMO_REST_URL` environment variable to point to your ICD/Maximo system. If you are connecting to trial ICD system, you may have to modify its context root as well. For example, if the URL used to login to the trial ICD system is https://siwr35cdwsa-tr3.sccd.ibmserviceengage.com/maximo_t4hj, the URL in the .env file will be https://siwr35cdwsa-tr3.sccd.ibmserviceengage.com/meaweb_t4hj/os/MXSR.
+1. Modify the hostname portion of `MAXIMO_REST_URL` environment variable to point to your ICD/Maximo system. If you are connecting to trial ICD system, you may have to modify its context root as well. For example, if the URL used to login to the trial ICD system is `https://siwr35cdwsa-tr3.sccd.ibmserviceengage.com/maximo_t4hj`, the URL in the .env file will be `https://siwr35cdwsa-tr3.sccd.ibmserviceengage.com/meaweb_t4hj/os/MXSR`.
 
 1. Set `MAXIMO_PERSONID` environment variable to a valid person ID in your ICD/Maximo system. For example, MAXADMIN. Note, the person ID is typically case sensitive.
 
@@ -392,9 +328,6 @@ Use GitHub to clone the repository locally,
 
 1. Save the file.
 
-
-<br>
-
 ### Installing and starting the app
 
 1. Navigate to the folder where your local ticketbot application locates.
@@ -413,17 +346,11 @@ Use GitHub to clone the repository locally,
 
 1. Point your browser to http://localhost:3000 to try out the app.
 
-
-<br>
-
 ## Running the use cases
 
 When pointing your browser to http://localhost:3000, you are starting a Q/A session. 
 
-
-<br>
-
-### Watson Assistance(Conversation) delivers
+### Watson Assistant delivers
 
 You may type problem statements such as
 * my pc is running slow
@@ -434,9 +361,6 @@ The virtual agent will do its best to address the issue, for example
 * Please power off wireless router in the conference room, waiting one minute and power it on
 
     ![Screen capture of workspace tile menu](doc/source/images/conversation_deliver.png)
-
-
-<br>
 
 ### Watson Discovery comes to rescue
 
@@ -451,15 +375,11 @@ in the Q/A session, the virtual agent may return suggestion(s) depending on info
 
 If the entries from the knowledge base does not provide sufficient information, end users have option to open ticket.
 
-
-<br>
-
 ### Opening a ticket in Maximo/ICD system
 
 As the last resort, the virtual agent can collect information and create a new ticket on your behalf. For example, if you ask
 
-
-* how to program in Java
+* How to program in Java
 
 This is an area that the virtual agent has not been trained and it founds nothing in knowledge base. It then prompts you
 
@@ -481,7 +401,7 @@ After you specify the ticket severity (high, medium and low), the virtual agent 
 
 ![Screen capture of workspace tile menu](doc/source/images/straightTicket.png)
 
-As the REST API is widely available, this app can be used to integrate Waston Assistant(Conversation) and Discovery service with most of back-office ticketing systems. Integrates with IBM Control Desk/Maximo is provided as an example in the code.
+As the REST API is widely available, this app can be used to integrate Waston Assistant and Discovery service with most of back-office ticketing systems. Integrates with IBM Control Desk/Maximo is provided as an example in the code.
 
 ```bash
 headers: {
@@ -495,104 +415,93 @@ headers: {
         }
 ```
 
+## Exploring the Watson Assistant service
 
-<br>
+Below is the sample response JSON object from Watson Assistant service. Values of its intents, entities, input, output and context can be gathered and/or manipulated in Node.js code.
 
-## Exploring data of Conversation service
+At the end of the JSON object, context.newticket and context.severity are related to the slot configurations in the Assistant service.
 
-Below is the sample response JSON object from Watson Assistant(Conversation) service. Values of its intents, entities, input, output and context can be gathered and/or manipulated in Node.js code.
+```JSON
+{
+	"intents": [{
+		"intent": "greetings",
+		"confidence": 0.46840930583966855
+	}],
+	"entities": [{
+			"entity": "severity",
+			"location": [
+				0,
+				1
+			],
+			"value": "2",
+			"confidence": 1
+		},
+		{
+			"entity": "sys-number",
+			"location": [
+				0,
+				1
+			],
+			"value": "2",
+			"confidence": 1,
+			"metadata": {
+				"numeric_value": 2
+			}
+		}
+	],
+	"input": {
+		"text": "2"
+	},
+	"output": {
+		"text": [
+			"Thank you for contacting IT helpdesk. A new ticket is opened."
+		],
+		"nodes_visited": [
+			"slot_6_1516850647245",
+			"node_1_1516850017677",
+			"node_13_1516852865520"
+		],
+		"log_messages": [
 
-At the end of the JSON object, context.newticket and context.severity are related to the slot configurations in Conversation service.
-
-```bash
-{  
-   "intents":[  
-      {  
-         "intent":"greetings",
-         "confidence":0.46840930583966855
-      }
-   ],
-   "entities":[  
-      {  
-         "entity":"severity",
-         "location":[  
-            0,
-            1
-         ],
-         "value":"2",
-         "confidence":1
-      },
-      {  
-         "entity":"sys-number",
-         "location":[  
-            0,
-            1
-         ],
-         "value":"2",
-         "confidence":1,
-         "metadata":{  
-            "numeric_value":2
-         }
-      }
-   ],
-   "input":{  
-      "text":"2"
-   },
-   "output":{  
-      "text":[  
-         "Thank you for contacting IT helpdesk. A new ticket is opened."
-      ],
-      "nodes_visited":[  
-         "slot_6_1516850647245",
-         "node_1_1516850017677",
-         "node_13_1516852865520"
-      ],
-      "log_messages":[  
-
-      ]
-   },
-   "context":{  
-      "conversation_id":"40a875f1-c8ef-4b63-9c69-661777bf3d71",
-      "system":{  
-         "dialog_stack":[  
-            {  
-               "dialog_node":"node_13_1516852865520"
-            }
-         ],
-         "dialog_turn_counter":17,
-         "dialog_request_counter":17,
-         "_node_output_map":{  
-            "Welcome":[  
-               0
-            ],
-            "node_3_1516832266395":[  
-               0
-            ],
-            "node_6_1516832414895":[  
-               0
-            ],
-            "node_5_1516850287208":[  
-               0
-            ],
-            "node_18_1517000905140":[  
-               0
-            ],
-            "node_13_1516852865520":[  
-               0
-            ],
-            "node_4_1516832287824":[  
-               0
-            ]
-         }
-      },
-      "newticket":true,
-      "severity":2
-   }
+		]
+	},
+	"context": {
+		"conversation_id": "40a875f1-c8ef-4b63-9c69-661777bf3d71",
+		"system": {
+			"dialog_stack": [{
+				"dialog_node": "node_13_1516852865520"
+			}],
+			"dialog_turn_counter": 17,
+			"dialog_request_counter": 17,
+			"_node_output_map": {
+				"Welcome": [
+					0
+				],
+				"node_3_1516832266395": [
+					0
+				],
+				"node_6_1516832414895": [
+					0
+				],
+				"node_5_1516850287208": [
+					0
+				],
+				"node_18_1517000905140": [
+					0
+				],
+				"node_13_1516852865520": [
+					0
+				],
+				"node_4_1516832287824": [
+					0
+				]
+			}
+		},
+		"newticket": true,
+		"severity": 2
+	}
 }
 ```
-
-
-<br>
 
 ## Modifying the app
 
@@ -600,19 +509,16 @@ After you have the app deployed and running, you can explore the source files an
 
 * Modify the .js files to change the app logic.
 * Modify the .html file to change the appearance of the app page.
-* Use the Conversation tool to train the service for new intents, or to modify the dialog flow. For more information, see the [Conversation service documentation][docs_landing].
+* Use the Assistant tool to train the service for new intents, or to modify the dialog flow. For more information, see the [Watson Assistant Documentation](https://console.bluemix.net/docs/services/conversation/getting-started.html#gettingstarted).
 
+## Deploying to IBM Cloud
 
-<br>
-
-## Deploying to Bluemix
-
-You can use Cloud Foundry to deploy your local version of the app to Bluemix.
+You can use Cloud Foundry to deploy your local version of the app to IBM Cloud.
 
 1. In the project root directory, open the `manifest.yml` file:
 
   * In the `applications` section of the `manifest.yml` file, change the `name` value to a unique name for your version of the demo app.
-  * In the `services` section, specify the name of the Assistant(Conversation) service instance and Discovery service instance that you created. If you do not remember the service name, use the `cf services` command to list all services you have created.
+  * In the `services` section, specify the name of the Assistant service instance and Discovery service instance that you created. If you do not remember the service name, use the `cf services` command to list all services you have created.
 
   The following example shows a modified `manifest.yml` file:
 
@@ -638,81 +544,38 @@ applications:
     NPM_CONFIG_PRODUCTION: false
   ```
 
-When you are ready to deploy the app to Bluemix environment,
+When you are ready to deploy the app to an IBM Cloud environment,
 
-1. In the Bluemix with the Cloud Foundry command-line tool, make sure you are in the correct folder where you downloaded the code pattern.
+1. With the Cloud Foundry command-line tool, make sure you are in the correct folder where you downloaded the code pattern.
 
-1. Push the app to Bluemix:
+1. Push the app to IBM Cloud:
 
   ```bash
   cf push
   ```
-  Access your app on Bluemix at the URL specified in the command output.
-
-
-<br>
+  Access your app on IBM Cloud at the URL specified in the command output.
 
 ## Troubleshooting
 
 If you encounter a problem, you can check the logs for more information. To see the logs, run the `cf logs` command:
 
-```none
+```bash
 cf logs <application-name> --recent
 ```
 
-
-<br>
-
 ## License
 
-This sample code is licensed under Apache 2.0.
-Full license text is available in [LICENSE](LICENSE).
-
-
-<br>
+This sample code is licensed under Apache 2.0. Full license text is available in [LICENSE](LICENSE).
 
 ## Contributing
 
 See [CONTRIBUTING](CONTRIBUTING.md).
 
+## Links
 
-<br>
-
-## Open Source @ IBM
-
-Find more open source projects on the
-[IBM Github Page](http://ibm.github.io/).
-
-
-[cf_docs]: (https://www.ibm.com/watson/developercloud/doc/common/getting-started-cf.html)
-[cloud_foundry]: https://github.com/cloudfoundry/cli#downloads
-[demo_url]: http://maximobot.mybluemix.net/
-[doc_intents]: (http://www.ibm.com/watson/developercloud/doc/conversation/intent_ovw.shtml)
-[docs]: http://www.ibm.com/watson/developercloud/doc/conversation/overview.shtml
-[docs_landing]: (http://www.ibm.com/watson/developercloud/doc/conversation/index.shtml)
-[node_link]: (http://nodejs.org/)
-[npm_link]: (https://www.npmjs.com/)
-[sign_up]: bluemix.net/registration
-
-
-<br>
-
-# Privacy Notice
-
-Sample web applications that include this package may be configured to track deployments to [IBM Cloud](https://www.bluemix.net/) and other Cloud Foundry platforms. The following information is sent to a [Deployment Tracker](https://github.com/IBM/metrics-collector-service) service on each deployment:
-
-* Node.js package version
-* Node.js repository URL
-* Application Name (`application_name`)
-* Application GUID (`application_id`)
-* Application instance index number (`instance_index`)
-* Space ID (`space_id`) or OS username
-* Application Version (`application_version`)
-* Application URIs (`application_uris`)
-* Cloud Foundry API (`cf_api`)
-* Labels of bound services
-* Number of instances for each bound service and associated plan information
-* Metadata in the repository.yaml file
-
-This data is collected from the `package.json` and `repository.yaml` file in the sample application and the `VCAP_APPLICATION` and `VCAP_SERVICES` environment variables in IBM Cloud and other Cloud Foundry platforms. This data is used by IBM to track metrics around deployments of sample applications to IBM Cloud to measure the usefulness of our examples, so that we can continuously improve the content we offer to you. Only deployments of sample applications that include code to ping the Deployment Tracker service will be tracked.
-
+* [Cloud_Foundry CLI](https://github.com/cloudfoundry/cli#downloads)
+* [Live Demo_URL](http://maximobot.mybluemix.net/)
+* [Watson Assistant Documentation](https://console.bluemix.net/docs/services/conversation/getting-started.html#gettingstarted)
+* [Watson Discovery Documentation](https://console.bluemix.net/docs/services/discovery/getting-started.html#gettingstarted)
+* [Node.JS](http://nodejs.org/)
+* [NPM](https://www.npmjs.com/)
