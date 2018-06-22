@@ -1,0 +1,9 @@
+id: https://github.com/IBM/virtualhelpdesk
+runtimes:
+  - Cloud Foundry
+services:
+  - Conversation
+  - Discovery
+event_id: web
+event_organizer: dev-journeys
+language: nodejs
