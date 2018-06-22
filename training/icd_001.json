@@ -1,0 +1,7 @@
+{
+   "body":"When end users experience DB2 connectivity issue, it typically inidicates that DB2 database in a locking or unstable state.<br><br>A DB2 database recycle is recommended. After gracely shutdown the applications which connect to the DB2 database, supporting system engineer can issue db2stop and then db2stop command to recycle the DB2 datbase.<br><br>",
+   "contentHtml":"<p>When end users experience DB2 connectivity issue, it typically inidicates that DB2 database in a locking or unstable state.<br><br>A DB2 database recycle is recommended. After gracely shutdown the applications which connect to the DB2 database, supporting system engineer can issue db2stop and then db2stop command to recycle the DB2 datbase.<br><br></p>",
+   "sourceUrl":"https://www.ibm.com/support/knowledgecenter/SSWT9A_7.6.0/com.ibm.sccd-adv.doc/sccd_kc_welcome.html",
+   "id":"icd_001",
+   "title":"Can't connect to DB2 database"
+}
