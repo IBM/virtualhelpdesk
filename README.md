@@ -38,6 +38,17 @@ This Node.js application demonstrates how to build a `Virtual HelpDesk`, and use
 
 [![Deploy to IBM Cloud](https://bluemix.net/deploy/button.png)](https://bluemix.net/deploy?repository=https://github.com/IBM/virtualhelpdesk)
 
+When you click the link above ("Deploy to IBM Cloud"), a Watson Assistant service and a Watson Discovery service are created for you without manual steps. It also deploys the Node.js application for quick verification. So, after you complete this section (if you choose to), you may skip the next two sections
+* Setting up Assistant(Conversation) service
+* Setting up Discovery service
+
+And continue in section
+* Setting up trial IBM Control Desk SaaS system
+
+Node.js application must be redeployed after it is configured to connect to Maximo/ICD system. The instruction is provided in section
+* Deploying to Bluemix
+
+
 ## Before you begin
 
 * Create an IBM Cloud account -- [Sign up](https://console.bluemix.net/registration/) for IBM Cloud, or use an existing account. Your account must have available space for at least one app and two Watson services.
