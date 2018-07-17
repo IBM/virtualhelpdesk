@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/IBM/virtualhelpdesk.svg?branch=master)](https://travis-ci.org/IBM/virtualhelpdesk)
 
-# Virtual HelpDesk using IBM Watson Assistant, Discovery service & Maximo/IBM Control Desk
+# Virtual HelpDesk using IBM Watson Assistant, Discovery service and Maximo/IBM Control Desk
 
 This Node.js application demonstrates how to build a `Virtual HelpDesk`, and use the Watson Assistant (formerly Conversation) and Discovery services to interact with end users for simple Q/A. With proper training, Assistant service can cover most of common questions/requests. When it is not been trained to address end users' specific question, the virtual agent searches in the knowledge base through Watson Discovery service and presents relevant entries to the end user. If the end user is still not satisfied, a new ticket is created in a back-office ticketing system, such as Maximo/IBM Control Desk(ICD) system.
 
@@ -30,7 +30,7 @@ This Node.js application demonstrates how to build a `Virtual HelpDesk`, and use
 
 # Watch the Video
 
-[![](doc/source/images/PlayVideo.png)](https://youtu.be/MjyX6vntejI)
+[![](http://img.youtube.com/vi/MjyX6vntejI/0.jpg)](https://www.youtube.com/watch?v=MjyX6vntejI)
 
 # Steps
 
