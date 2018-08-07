@@ -406,10 +406,6 @@ Perform tasks in this section if you have a `newer` release of Maximo/ICD system
 1. Save the file.
 
 
-<br>
-
-
-
 #### Configuring .env file connecting to an old release of Maximo/ICD system
 
 Perform tasks in this section if you have an `older` release of Maximo/ICD system(there is no OSLC Resources application in your system).
