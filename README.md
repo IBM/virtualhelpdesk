@@ -303,7 +303,65 @@ Use GitHub to clone the repository locally. In a terminal, run:
 
 1. Save the file.
 
+
 ### Configuring the Maximo/ICD environment
+
+Default behavior of a Maximo/ICD system was changed slightly in one of v7.6.0.x releases. The way used originally in this code pattern to make REST API calls is no longer available after out of box deployment. The new way is not available in old Maximo/ICD releases. This chalenge forces me to discuss two ways to make REST API calls to Maximo.ICD system.
+
+One way to identify if you have an old release of Maximo/ICD system or a new one, is to check if you have OSLC Resources application in your system. Navigation path is Go To Applications -> Integration -> OSLC Resources.
+
+
+#### Configuring Object Structures in Maximo/ICD system
+
+This section is only required if you have a newer release of Maximo/ICD system(there is OSLC Resources application in your system).
+
+To create new Object Structure MYSR,
+
+1. Login to your Maximo/ICD system.
+
+1. Navigate to `Go To Applications` -> `Integration` -> `Object Structures`.
+
+1. Search and open the Object Structure `OSLCSR` (or `OSLCSRDETAIL`).
+
+1. Select `More Actions` -> `Duplicate Object Structure`.
+
+1. Define the new object structure,
+    * Object Structure Name = “MYSR”
+    * Description = “My Service Request Resource”
+    * Consumed By = “OSLC”
+
+1. Save the new Object Structure.
+
+1. Still in the Object Structure MYSR record, navigate to `More Actions` (or `Select Action`) -> `Exclude/Include Fields`.
+
+1. Locate attribute `AFFECTEDPERSON` and unselect the `Exclude?` checkbox.
+
+
+#### Configuring OSLC Resources in Maximo/ICD system
+
+This section is only required if you have a newer release of Maximo/ICD system(there is OSLC Resources application in your system).
+
+To create new OSLC Resource MYSR,
+
+1. Login to your Maximo/ICD system.
+
+1. Navigate to `Go To Applications` -> `Integration` -> `OSLC Resources`.
+
+1. Click the `NEW` icon.
+
+1. Define the new OSLC resource,
+    * OSLC Resource Name = “MYSR”
+    * Description = “My Service Request Resource”
+    * Object Structure = “MYSR”
+    * Domain Name = “SmartCloudControlDesk” (“SmarterPhysicalInfrastructure” for a Maximo system)
+    * Default Namespace URI = http://jazz.net/ns/ism/helpdesk/sccd# (http://jazz.net/ns/ism/asset/smarter_physical_infrastructure# for a Maximo system)
+
+1. Save.
+
+
+#### Configuring .env file connecting to a new release of Maximo/ICD system
+
+Perform tasks in this section if you have a `newer` release of Maximo/ICD system(there is OSLC Resources application in your system).
 
 1. Set `MAXIMO_AUTH` environment variable in file .env. This variable setting depends on how Maximo/ICD authentication is configured.
 
@@ -311,13 +369,64 @@ Use GitHub to clone the repository locally. In a terminal, run:
 
     * `Native Maximo Authentication` - In this case, the variable has one part only. It is `user:password` base64 encoded. You can get its value through any online base64 encoder based on your ICD/Maximo user:password. Note, the trial ICD SaaS system has navive Maximo authentication.
 
-1. Keep "application/json" as the value of `MAXIMO_CONTEXT_TYPE` environment variable.
+1. Keep `application/json` as the value of `MAXIMO_CONTEXT_TYPE` environment variable.
 
-1. Modify the hostname portion of `MAXIMO_REST_URL` environment variable to point to your ICD/Maximo system. If you are connecting to trial ICD system, you may have to modify its context root as well. For example, if the URL used to login to the trial ICD system is `https://siwr35cdwsa-tr3.sccd.ibmserviceengage.com/maximo_t4hj`, the URL in the .env file will be `https://siwr35cdwsa-tr3.sccd.ibmserviceengage.com/meaweb_t4hj/os/MXSR`.
+1. Modify the hostname portion of `MAXIMO_REST_URL` environment variable to point to your ICD/Maximo system. If you are connecting to trial ICD system, you may have to modify its context root as well. For example, if the URL used to login to the trial ICD system is https://siwr35cdwsa-tr3.sccd.ibmserviceengage.com/maximo_t4hj, the URL in the .env file will be https://siwr35cdwsa-tsb.sccd.ibmserviceengage.com/maximo_t4hj/oslc/os/MYSR.
 
 1. Set `MAXIMO_PERSONID` environment variable to a valid person ID in your ICD/Maximo system. For example, MAXADMIN. Note, the person ID is typically case sensitive.
 
-1. Set `MAXIMO_UI_URL` environment variable in the similar way as you have done for `MAXIMO_REST_URL` environment variable. Change its hostname and context root.
+1. Set `MAXIMO_UI_URL` environment variable in the similar way as you have done for MAXIMO_REST_URL environment variable. Change its hostname and context root.
+
+1. Set `MAXIMO_CLASSSTRUCTUREID` environment variable to a valid classstructureid in your ICD/Maximo system. For example, 21 which is typically configured in a trial ICD system.
+
+1. Set `MAXIMO_PREFIX` environment variable. For example, sccd in a ICD system, spi in a Maximo system.
+
+    ```bash
+    # For Application Server Authentication (LDAP)
+    MAXIMO_AUTH=BASIC bWF4YWRtaW46S2h0TlBncGM=
+    MAXIMO_CONTEXT_TYPE=application/json
+    MAXIMO_REST_URL=https://siwr35cdwsa-tsb.sccd.ibmserviceengage.com/maximo_t4hj/oslc/os/MYSR
+    MAXIMO_PERSONID=MAXADMIN
+    MAXIMO_CLASSSTRUCTUREID=21
+    MAXIMO_PREFIX=sccd
+    MAXIMO_UI_URL=https://siwr35cdwsa-tsb.sccd.ibmserviceengage.com/maximo_t4hj/ui/?event=loadapp&value=sr&additionalevent=useqbe&forcereload=true/&additionaleventvalue=ticketid=
+    ```
+
+    ```bash
+    # For Native Maximo Authentication
+    MAXIMO_AUTH=bWF4YWRtaW46S2h0TlBncGM=
+    MAXIMO_CONTEXT_TYPE=application/json
+    MAXIMO_REST_URL=https://siwr35cdwsa-tsb.sccd.ibmserviceengage.com/maximo_t4hj/oslc/os/MYSR
+    MAXIMO_PERSONID=MAXADMIN
+    MAXIMO_CLASSSTRUCTUREID=21
+    MAXIMO_PREFIX=sccd
+    MAXIMO_UI_URL=https://siwr35cdwsa-tsb.sccd.ibmserviceengage.com/maximo_t4hj/ui/?event=loadapp&value=sr&additionalevent=useqbe&forcereload=true/&additionaleventvalue=ticketid=
+    ```
+
+1. Save the file.
+
+
+<br>
+
+
+
+#### Configuring .env file connecting to an old release of Maximo/ICD system
+
+Perform tasks in this section if you have an `older` release of Maximo/ICD system(there is no OSLC Resources application in your system).
+
+1. Set `MAXIMO_AUTH` environment variable in file .env. This variable setting depends on how Maximo/ICD authentication is configured.
+
+    * `Application Server Authentication (LDAP)` - In this case, the variable has two parts separated by a blank space. The first part is the value "Basic". The second part is `user:password` base64 encoded. You can get its value through any online base64 encoder based on your ICD/Maximo user:password.
+
+    * `Native Maximo Authentication` - In this case, the variable has one part only. It is `user:password` base64 encoded. You can get its value through any online base64 encoder based on your ICD/Maximo user:password. Note, the trial ICD SaaS system has navive Maximo authentication.
+
+1. Keep `application/json` as the value of `MAXIMO_CONTEXT_TYPE` environment variable.
+
+1. Modify the hostname portion of `MAXIMO_REST_URL` environment variable to point to your ICD/Maximo system. If you are connecting to trial ICD system, you may have to modify its context root as well. For example, if the URL used to login to the trial ICD system is https://siwr35cdwsa-tr3.sccd.ibmserviceengage.com/maximo_t4hj, the URL in the .env file will be https://siwr35cdwsa-tr3.sccd.ibmserviceengage.com/meaweb_t4hj/os/MXSR.
+
+1. Set `MAXIMO_PERSONID` environment variable to a valid person ID in your ICD/Maximo system. For example, MAXADMIN. Note, the person ID is typically case sensitive.
+
+1. Set `MAXIMO_UI_URL` environment variable in the similar way as you have done for MAXIMO_REST_URL environment variable. Change its hostname and context root.
 
     ```bash
     # For Application Server Authentication (LDAP)
@@ -338,6 +447,7 @@ Use GitHub to clone the repository locally. In a terminal, run:
     ```
 
 1. Save the file.
+
 
 ### Installing and starting the app
 
