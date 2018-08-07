@@ -184,10 +184,18 @@ app.post('/api/message', function (req, res) {
 
         callMaximo(description, data.context.severity).then(function (body) {
 
+          // For old ICD/Maximo release
+          /*
           var ticketidindex2 = body.search('</TICKETID>');
           var ticketidindex1 = body.search('<TICKETID>');
           var ticketid = body.substring(ticketidindex2, ticketidindex1 + 10);
+          */
 
+          // For new ICD/Maximo release
+          var obj = JSON.parse(body);
+          var element = process.env.MAXIMO_PREFIX + ":ticketid";
+          var ticketid = obj[element];
+          
           console.log('##############################222\n');
           console.log("TICKETID=" + ticketid + "\n");
           console.log(body + '\n');
@@ -360,7 +368,8 @@ function callMaximo(description, severity) {
     </max:CreateMXSR>'
     */
 
-    // Calling ICD/Maximo REST API to open ticket
+    // Calling ICD/Maximo REST API to open ticket (for old ICD/Maximo release)
+    /*
     var maximo_rest_body = '<?xml version="1.0" encoding="UTF-8"?> \
         <max:CreateMXSR \
             xmlns:max="http://www.ibm.com/maximo" creationDateTime="' + formatted_now + '" > \
@@ -376,8 +385,19 @@ function callMaximo(description, severity) {
                 </max:SR> \
             </max:MXSRSet> \
         </max:CreateMXSR>'
+    */
 
-    console.log(maximo_rest_body);
+    // Calling ICD/Maximo REST API to open ticket (for new ICD/Maximo release)
+    var maximo_rest_body = '{ \
+      "' + process.env.MAXIMO_PREFIX + ':description":"' + description + '", \
+      "' + process.env.MAXIMO_PREFIX + ':affectedperson":"' + process.env.MAXIMO_PERSONID + '", \
+      "' + process.env.MAXIMO_PREFIX + ':status":"NEW"' + ', \
+      "' + process.env.MAXIMO_PREFIX + ':reportedby":"' + process.env.MAXIMO_PERSONID + '", \
+      "' + process.env.MAXIMO_PREFIX + ':classstructureid":"' + process.env.MAXIMO_CLASSSTRUCTUREID + '", \
+      "' + process.env.MAXIMO_PREFIX + ':reportedpriority":' + severity + ' \
+      }'
+
+      console.log(maximo_rest_body);
 
     try {
 
@@ -388,7 +408,8 @@ function callMaximo(description, severity) {
           'Authorization': process.env.MAXIMO_AUTH,
           // For Native Maximo Authentication
           'MAXAUTH': process.env.MAXIMO_AUTH,
-          'Content-Type': process.env.MAXIMO_CONTEXT_TYPE,
+          'CONTENT-TYPE': process.env.MAXIMO_CONTEXT_TYPE,
+          'PROPERTIES':'*'
         },
 
         url: process.env.MAXIMO_REST_URL,
