@@ -306,9 +306,9 @@ Use GitHub to clone the repository locally. In a terminal, run:
 
 ### Configuring the Maximo/ICD environment
 
-Default behavior of a Maximo/ICD system was changed slightly in one of v7.6.0.x releases. The way used originally in this code pattern to make REST API calls is no longer available after out of box deployment. The new way is not available in old Maximo/ICD releases. This chalenge forces me to discuss two ways to make REST API calls to Maximo.ICD system.
+Default behavior of a Maximo/ICD system was changed slightly in one of v7.6.0.x releases. The way used originally in this code pattern to make REST API calls to Maximo/ICD system, is no longer available after out of box deployment. The new way is not available in old Maximo/ICD releases. For this reason, two ways to make REST API calls to Maximo.ICD system is discussed.
 
-One way to identify if you have an old release of Maximo/ICD system or a new one, is to check if you have OSLC Resources application in your system. Navigation path is Go To Applications -> Integration -> OSLC Resources.
+One way to identify if you have an old release of Maximo/ICD system or a new one, is to check if you have OSLC Resources application in your system. Navigation path is Go To Applications -> Integration -> OSLC Resources. If you recently requested a trial ICD system, you have the latest release.
 
 
 #### Configuring Object Structures in Maximo/ICD system
