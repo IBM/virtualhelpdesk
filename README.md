@@ -20,7 +20,7 @@ This Node.js application demonstrates how to build a `Virtual HelpDesk`, and use
 
 * [IBM Watson Assistant](https://www.ibm.com/watson/developercloud/conversation.html): Build, test and deploy a bot or virtual agent across mobile devices, messaging platforms, or even on a physical robot.
 * [IBM Watson Discovery](https://www.ibm.com/watson/developercloud/discovery.html): A cognitive search and content analytics engine for applications to identify patterns, trends, and actionable insights.
-* [Maximo/IBM Control Desk(ICD)](https://www-01.ibm.com/software/applications/control-desk/): Back-office ticketing system. Other ticketing system can be used alternatively.
+* [Maximo/IBM Control Desk(ICD)](https://www-01.ibm.com/software/applications/control-desk/): Back-office ticketing system. Other ticketing system can be used alternatively. (Variation of this code pattern connecting to ServiceNow is available at https://github.com/lee-zhg/virtualhelpdesk-1)
 
 ![Demo](doc/source/images/VirtualHelpDeskComponents.png)
 
