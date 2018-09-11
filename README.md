@@ -672,6 +672,12 @@ When you are ready to deploy the app to an IBM Cloud environment,
   ```
   Access your app on IBM Cloud at the URL specified in the command output.
 
+
+## Deploying to a Container on IBM Cloud with Kubernetes
+
+Run in a container on IBM Cloud, using [these instructions](doc/source/Container.md).
+
+
 ## Troubleshooting
 
 If you encounter a problem, you can check the logs for more information. To see the logs, run the `cf logs` command:
