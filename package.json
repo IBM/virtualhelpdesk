@@ -25,7 +25,8 @@
     "express": "^4.14.0",
     "ibm-maximo-api": "^1.0.11",
     "python": "^0.0.4",
-    "watson-developer-cloud": "^2.8.1",
+    "vcap_services": "^0.2.0",
+    "watson-developer-cloud": "^3.5.3",
     "node-datetime": "*"
   },
   "devDependencies": {
