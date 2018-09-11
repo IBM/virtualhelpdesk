@@ -53,10 +53,10 @@ $ export CLUSTER_NAME=<your_cluster_name>
 * Before you continue to the next step, verify that the deployment of your worker node is complete.
 
 ```
-ibmcloud ks workers <cluster_name_or_ID>
+ibmcloud ks workers $CLUSTER_NAME
 ```
 
-> When your worker node is finished provisioning, the status changes to Ready or Deployed, and you can start binding IBM Cloud services.
+> When your worker node is finished provisioning, the status changes to Ready, and you can start binding IBM Cloud services.
 
 * Set the Kubernetes environment variable KUBECONFIG to work with your cluster:
 
@@ -369,7 +369,7 @@ $ kubectl logs <pod name>
 To delete all your services and deployments, run:
 
 ```bash
-$ kubectl delete deployment <deployment_name>
+$ kubectl delete deployment $KUBE_SERVICE
 $ kubectl delete service $KUBE_SERVICE
 ```
 
