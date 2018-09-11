@@ -18,10 +18,14 @@
 
 var express = require('express'); // app server
 var bodyParser = require('body-parser'); // parser for post requests
-var Conversation = require('watson-developer-cloud/conversation/v1'); // watson sdk
+//var Conversation = require('watson-developer-cloud/conversation/v1'); // watson sdk
 var request = require('request');
 var req = require('request');
 var dateTime = require('node-datetime');
+
+var vcapServices = require('vcap_services');
+var conversationCredentials = vcapServices.getCredentials('conversation');
+var watson = require('watson-developer-cloud'); // watson sdk
 
 var app = express();
 var description = '';
@@ -44,6 +48,7 @@ const DEFAULT_NAME_D = 'Discovery-ICD';
 app.use(express.static('./public')); // load UI from public folder
 app.use(bodyParser.json());
 
+/*
 // Create the Conversation service wrapper
 var conversation = new Conversation({
   // If unspecified here, the CONVERSATION_USERNAME and CONVERSATION_PASSWORD env properties will be checked
@@ -53,6 +58,11 @@ var conversation = new Conversation({
   url: 'https://gateway.watsonplatform.net/conversation/api',
   version_date: '2016-10-21',
   version: 'v1'
+});
+*/
+
+const conversation = new watson.AssistantV1({ 
+  version: '2018-02-16'
 });
 
 // for automatically deploying to IBM Cloud
@@ -73,8 +83,8 @@ conversationSetup.setupConversationWorkspace(conversationSetupParams, (err, data
 var discovery = new Discovery({
   // if left unspecified here, the SDK will fall back to the DISCOVERY_USERNAME and DISCOVERY_PASSWORD
   // environment properties, and then Bluemix's VCAP_SERVICES environment property
-  // username: 'INSERT YOUR USERNAME FOR THE SERVICE HERE',
-  // password: 'INSERT YOUR PASSWORD FOR THE SERVICE HERE'
+  // username: '62bf8db7-61b5-4d05-b69b-dba27bad4b22',
+  // password: 'ObnwQ0LKlICr'
   // url: 'INSERT YOUR URL FOR THE SERVICE HERE'
   version_date: '2017-09-01',
   url: 'https://gateway.watsonplatform.net/discovery/api/'
