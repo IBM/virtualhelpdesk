@@ -1,0 +1,104 @@
+---
+# Service to expose frontend
+apiVersion: v1
+kind: Service
+metadata:
+  name: vhelpdeskservice
+  labels:
+    app: vhelpdeskservice
+    tier: frontend
+spec:
+  type: NodePort
+  ports:
+  - port: 3000
+  selector:
+    app: vhelpdeskservice
+    tier: frontend
+---
+# Application to deploy
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: vhelpdeskservice
+spec:
+  replicas: 2 # tells deployment to run 2 pods matching the template
+  template: # create pods using pod definition in this template
+    metadata:
+      labels:
+        app: vhelpdeskservice
+        tier: frontend
+    spec:
+      containers:
+      - name: vhelpdeskservice
+        image: registry.ng.bluemix.net/zhangllc/virtualhelpdesk:1
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        env:
+          - name: WORKSPACE_ID
+            valueFrom:
+              configMapKeyRef:
+                name: virtualhelpdeskmap
+                key: WORKSPACE_ID
+          - name: ENVIRONMENT_ID
+            valueFrom:
+              configMapKeyRef:
+                name: virtualhelpdeskmap
+                key: ENVIRONMENT_ID
+          - name: COLLECTION_ID
+            valueFrom:
+              configMapKeyRef:
+                name: virtualhelpdeskmap
+                key: COLLECTION_ID
+          - name: DISCOVERY_URL
+            valueFrom:
+              configMapKeyRef:
+                name: virtualhelpdeskmap
+                key: DISCOVERY_URL
+          - name: MAXIMO_AUTH
+            valueFrom:
+              configMapKeyRef:
+                name: virtualhelpdeskmap
+                key: MAXIMO_AUTH
+          - name: MAXIMO_CONTEXT_TYPE
+            valueFrom:
+              configMapKeyRef:
+                name: virtualhelpdeskmap
+                key: MAXIMO_CONTEXT_TYPE
+          - name: MAXIMO_REST_URL
+            valueFrom:
+              configMapKeyRef:
+                name: virtualhelpdeskmap
+                key: MAXIMO_REST_URL
+          - name: MAXIMO_PERSONID
+            valueFrom:
+              configMapKeyRef:
+                name: virtualhelpdeskmap
+                key: MAXIMO_PERSONID
+          - name: MAXIMO_CLASSSTRUCTUREID
+            valueFrom:
+              configMapKeyRef:
+                name: virtualhelpdeskmap
+                key: MAXIMO_CLASSSTRUCTUREID
+          - name: MAXIMO_PREFIX
+            valueFrom:
+              configMapKeyRef:
+                name: virtualhelpdeskmap
+                key: MAXIMO_PREFIX
+          - name: MAXIMO_UI_URL
+            valueFrom:
+              configMapKeyRef:
+                name: virtualhelpdeskmap
+                key: MAXIMO_UI_URL
+          - name: conversationvariable
+            valueFrom:
+              secretKeyRef:
+                name: binding-assistant-icd
+                key: binding
+          - name: discoveryvariable
+            valueFrom:
+              secretKeyRef:
+                name: binding-discovery-icd
+                key: binding
+
