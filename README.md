@@ -251,7 +251,7 @@ Use GitHub to clone the repository locally. In a terminal, run:
 
 1. Click the ![Copy](doc/source/images/copy_icon.png) icon to copy the workspace ID to the clipboard.
 
-1. On the local system, paste the workspace ID into the WORKSPACE_ID variable in the `.env` file. 
+1. On the local system, paste the workspace ID into the `WORKSPACE_ID` variable in the `.env` file. 
 
 1. Save the file.
 
@@ -308,12 +308,12 @@ Use GitHub to clone the repository locally. In a terminal, run:
 
 Default behavior of a Maximo/ICD system was changed slightly in one of v7.6.0.x releases. The way used originally in this code pattern to make REST API calls to Maximo/ICD system, is no longer available after out of box deployment. The new way is not available in old Maximo/ICD releases. For this reason, two ways to make REST API calls to Maximo.ICD system is discussed.
 
-One way to identify if you have an old release of Maximo/ICD system or a new one, is to check if you have OSLC Resources application in your system. Navigation path is Go To Applications -> Integration -> OSLC Resources. If you recently requested a trial ICD system, you have the latest release.
+One way to identify if you have an old release of Maximo/ICD system or a new one, is to check if you have OSLC Resources application in your system. Navigation path is Go To `Applications` -> `Integration` -> `OSLC Resources`. If you recently requested a trial ICD system, you have the latest release.
 
 
 #### Configuring Object Structures in Maximo/ICD system
 
-This section is only required if you have a newer release of Maximo/ICD system(there is OSLC Resources application in your system).
+This section is only required if you have a newer release of Maximo/ICD system (there is OSLC Resources application in your system).
 
 To create new Object Structure MYSR,
 
@@ -339,7 +339,7 @@ To create new Object Structure MYSR,
 
 #### Configuring OSLC Resources in Maximo/ICD system
 
-This section is only required if you have a newer release of Maximo/ICD system(there is OSLC Resources application in your system).
+This section is only required if you have a newer release of Maximo/ICD system (there is OSLC Resources application in your system).
 
 To create new OSLC Resource MYSR,
 
@@ -361,25 +361,25 @@ To create new OSLC Resource MYSR,
 
 #### Configuring .env file connecting to a new release of Maximo/ICD system
 
-Perform tasks in this section if you have a `newer` release of Maximo/ICD system(there is OSLC Resources application in your system).
+Perform tasks in this section if you have a `newer` release of Maximo/ICD system (there is OSLC Resources application in your system).
 
-1. Set `MAXIMO_AUTH` environment variable in file .env. This variable setting depends on how Maximo/ICD authentication is configured.
+1. Set `MAXIMO_AUTH` environment variable in file `.env`. This variable setting depends on how Maximo/ICD authentication is configured.
 
     * `Application Server Authentication (LDAP)` - In this case, the variable has two parts separated by a blank space. The first part is the value "Basic". The second part is `user:password` base64 encoded. You can get its value through any online base64 encoder based on your ICD/Maximo user:password.
 
-    * `Native Maximo Authentication` - In this case, the variable has one part only. It is `user:password` base64 encoded. You can get its value through any online base64 encoder based on your ICD/Maximo user:password. Note, the trial ICD SaaS system has navive Maximo authentication.
+    * `Native Maximo Authentication` - In this case, the variable has one part only. It is `user:password` base64 encoded. You can get its value through any online base64 encoder based on your ICD/Maximo user:password. Note, the trial ICD SaaS system has native Maximo authentication.
 
 1. Keep `application/json` as the value of `MAXIMO_CONTEXT_TYPE` environment variable.
 
 1. Modify the hostname portion of `MAXIMO_REST_URL` environment variable to point to your ICD/Maximo system. If you are connecting to trial ICD system, you may have to modify its context root as well. For example, if the URL used to login to the trial ICD system is https://siwr35cdwsa-tr3.sccd.ibmserviceengage.com/maximo_t4hj, the URL in the .env file will be https://siwr35cdwsa-tsb.sccd.ibmserviceengage.com/maximo_t4hj/oslc/os/MYSR.
 
-1. Set `MAXIMO_PERSONID` environment variable to a valid person ID in your ICD/Maximo system. For example, MAXADMIN. Note, the person ID is typically case sensitive.
+1. Set `MAXIMO_PERSONID` environment variable to a valid person ID in your ICD/Maximo system. For example, `MAXADMIN`. Note, the person ID is typically case sensitive.
 
-1. Set `MAXIMO_UI_URL` environment variable in the similar way as you have done for MAXIMO_REST_URL environment variable. Change its hostname and context root.
+1. Set `MAXIMO_UI_URL` environment variable in the similar way as you have done for `MAXIMO_REST_URL` environment variable. Change its hostname and context root.
 
 1. Set `MAXIMO_CLASSSTRUCTUREID` environment variable to a valid classstructureid in your ICD/Maximo system. For example, 21 which is typically configured in a trial ICD system.
 
-1. Set `MAXIMO_PREFIX` environment variable. For example, sccd in a ICD system, spi in a Maximo system.
+1. Set `MAXIMO_PREFIX` environment variable. For example, `sccd` in a ICD system, `spi` in a Maximo system.
 
     ```bash
     # For Application Server Authentication (LDAP)
@@ -408,7 +408,7 @@ Perform tasks in this section if you have a `newer` release of Maximo/ICD system
 
 #### Configuring .env file connecting to an old release of Maximo/ICD system
 
-Perform tasks in this section if you have an `older` release of Maximo/ICD system(there is no OSLC Resources application in your system).
+Perform tasks in this section if you have an `older` release of Maximo/ICD system (there is no OSLC Resources application in your system).
 
 1. Set `MAXIMO_AUTH` environment variable in file .env. This variable setting depends on how Maximo/ICD authentication is configured.
 
@@ -420,9 +420,9 @@ Perform tasks in this section if you have an `older` release of Maximo/ICD syste
 
 1. Modify the hostname portion of `MAXIMO_REST_URL` environment variable to point to your ICD/Maximo system. If you are connecting to trial ICD system, you may have to modify its context root as well. For example, if the URL used to login to the trial ICD system is https://siwr35cdwsa-tr3.sccd.ibmserviceengage.com/maximo_t4hj, the URL in the .env file will be https://siwr35cdwsa-tr3.sccd.ibmserviceengage.com/meaweb_t4hj/os/MXSR.
 
-1. Set `MAXIMO_PERSONID` environment variable to a valid person ID in your ICD/Maximo system. For example, MAXADMIN. Note, the person ID is typically case sensitive.
+1. Set `MAXIMO_PERSONID` environment variable to a valid person ID in your ICD/Maximo system. For example, `MAXADMIN`. Note, the person ID is typically case sensitive.
 
-1. Set `MAXIMO_UI_URL` environment variable in the similar way as you have done for MAXIMO_REST_URL environment variable. Change its hostname and context root.
+1. Set `MAXIMO_UI_URL` environment variable in the similar way as you have done for `MAXIMO_REST_URL` environment variable. Change its hostname and context root.
 
     ```bash
     # For Application Server Authentication (LDAP)
@@ -481,7 +481,7 @@ The virtual agent will do its best to address the issue, for example
 
 ### Watson Discovery comes to rescue
 
-When end users have any question/request that the virtual agent has not been trained to understand, it searches in the knowledge base through Watson Discovery service and presents relavant entries as suggestion(s) to the end users.
+When end users have any question/request that the virtual agent has not been trained to understand, it searches in the knowledge base through Watson Discovery service and presents relevant entries as suggestion(s) to the end users.
 
 For example, when you enter 
 * can't connect to DB2
@@ -518,7 +518,7 @@ After you specify the ticket severity (high, medium and low), the virtual agent 
 
 ![Screen capture of workspace tile menu](doc/source/images/straightTicket.png)
 
-As the REST API is widely available, this app can be used to integrate Waston Assistant and Discovery service with most of back-office ticketing systems. Integrates with IBM Control Desk/Maximo is provided as an example in the code.
+As the REST API is widely available, this app can be used to integrate Watson Assistant and Discovery service with most of back-office ticketing systems. Integrates with IBM Control Desk/Maximo is provided as an example in the code.
 
 ```bash
 headers: {
