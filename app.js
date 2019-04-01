@@ -16,9 +16,11 @@
 
 'use strict';
 
+const AssistantV1 = require('watson-developer-cloud/assistant/v1');
+const DiscoveryV1 = require('watson-developer-cloud/discovery/v1');
+
 var express = require('express'); // app server
 var bodyParser = require('body-parser'); // parser for post requests
-//var Conversation = require('watson-developer-cloud/conversation/v1'); // watson sdk
 var request = require('request');
 var req = require('request');
 var dateTime = require('node-datetime');
@@ -32,7 +34,6 @@ var description = '';
 
 // for automatically deploying to IBM Cloud
 const fs = require('fs'); // file system for loading JSON;
-var Discovery = require('watson-developer-cloud/discovery/v1');
 const WatsonDiscoverySetup = require('./lib/watson-discovery-setup');
 const WatsonConversationSetup = require('./lib/watson-conversation-setup');
 const DISCOVERY_ACTION = 'rnr'; // Replaced RnR w/ Discovery but Assistant action is still 'rnr'.
@@ -61,9 +62,8 @@ var conversation = new Conversation({
 });
 */
 
-const conversation = new watson.AssistantV1({ 
-  version: '2018-02-16'
-});
+// Create the Conversation service wrapper
+const conversation = new AssistantV1({ version: '2018-02-16' });
 
 // for automatically deploying to IBM Cloud
 let workspaceID; // workspaceID will be set when the workspace is created or validated.
@@ -80,15 +80,7 @@ conversationSetup.setupConversationWorkspace(conversationSetupParams, (err, data
 });
 
 // Create the Discovery service wrapper
-var discovery = new Discovery({
-  // if left unspecified here, the SDK will fall back to the DISCOVERY_USERNAME and DISCOVERY_PASSWORD
-  // environment properties, and then Bluemix's VCAP_SERVICES environment property
-  // username: '62bf8db7-61b5-4d05-b69b-dba27bad4b22',
-  // password: 'ObnwQ0LKlICr'
-  // url: 'INSERT YOUR URL FOR THE SERVICE HERE'
-  version_date: '2017-09-01',
-  url: 'https://gateway.watsonplatform.net/discovery/api/'
-});
+const discovery = new DiscoveryV1({ version: '2018-12-03' });
 
 // for automatically deploying to IBM Cloud
 let discoveryParams; // discoveryParams will be set after Discovery is validated and setup.
@@ -297,10 +289,12 @@ function callDiscovery(query_str) {
 
     // Setup Watson Discovery query
     discovery_query += process.env.DISCOVERY_URL;
-    discovery_query += '/environments/' + process.env.ENVIRONMENT_ID;
-    discovery_query += '/collections/' + process.env.COLLECTION_ID;
-    discovery_query += '/query?version=2017-11-07&deduplicate=false&highlight=true&passages=false&passages.count=5&natural_language_query=';
+    discovery_query += '/v1/environments/' + process.env.DISCOVERY_ENVIRONMENT_ID;
+    discovery_query += '/collections/' + process.env.DISCOVERY_COLLECTION_ID;
+    discovery_query += '/query?version=2018-12-03&deduplicate=false&highlight=true&passages=false&passages.count=5&natural_language_query=';
     discovery_query += query_str;
+    //console.log("+++++++++++++++++++++++")
+    //console.log(discovery_query)
 
     // call Watson Discovery service
     try {
@@ -313,8 +307,8 @@ function callDiscovery(query_str) {
         url: discovery_query,
         method: "GET",
         auth: {
-          user: process.env.DISCOVERY_USERNAME,
-          pass: process.env.DISCOVERY_PASSWORD
+          user: 'apikey',
+          pass: process.env.DISCOVERY_IAM_APIKEY
         }
       }, function (err, resp, body) {
         if (err) {
