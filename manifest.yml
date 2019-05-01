@@ -1,9 +1,9 @@
 ---
 declared-services:
-  Conversation-ICD:
+  vhd-assistant:
     label: conversation
     plan: free
-  Discovery-ICD:
+  vhd-discovery:
     label: discovery
     plan: lite
 applications:
@@ -13,7 +13,7 @@ applications:
   memory: 512M
   instances: 1
   services:
-  - Conversation-ICD
-  - Discovery-ICD
+  - vhd-assistant
+  - vhd-discovery
   env:
     NPM_CONFIG_PRODUCTION: false
